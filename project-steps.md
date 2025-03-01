@@ -12,7 +12,7 @@ The system uses DSPy as an agentic framework to intelligently identify user need
 - Anyone who wants to explore Danish statistical data without programming expertise
 
 ## Project Setup & Configuration
-- [X] Step 1: Set up project with draft Loveable.dev UI
+- [ ] Step 1: Set up project with draft Loveable.dev UI
   - **Task**: Clone and integrate the draft Loveable.dev UI design and adapt it to work with our backend
   - **Files**:
     - `config.py`: Configuration settings and environment variables
@@ -23,7 +23,7 @@ The system uses DSPy as an agentic framework to intelligently identify user need
   - **Step Dependencies**: None
   - **User Instructions**: Clone the repository using `git pull Rune-Nedergaard/danish-data-dialogue`, then run `pip install -r requirements.txt` to install dependencies
 
-- [X] Step 2: Set up environment configuration
+- [ ] Step 2: Set up environment configuration
   - **Task**: Create configuration handling for environment variables and settings
   - **Files**:
     - `config.py`: Implement configuration loading and environment variable management

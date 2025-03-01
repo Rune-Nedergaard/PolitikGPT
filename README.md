@@ -1,25 +1,25 @@
 # Danish Statistics Explorer
 
-A public web application providing non-technical users with easy access to Statistics Denmark's Statbanks API through an intelligent, conversational interface.
+A public web application that provides non-technical users with easy access to Statistics Denmark's Statbanks API through an intelligent, conversational interface.
 
-## Project Overview
+## Overview
 
-The Danish Statistics Explorer bridges the gap between complex statistical data and everyday users by leveraging Gemini Flash 2.0 within an intuitive interface. The system uses DSPy as an agentic framework to intelligently identify user needs, suggest appropriate datasets, perform multi-hop reasoning when necessary, and present results through clean, minimalist visualizations.
+The Danish Statistics Explorer bridges the gap between complex statistical data and everyday users by leveraging Gemini Flash 2.0 within an intuitive interface. The application guides users through an exploratory research process, helping them discover, analyze, and visualize Danish statistical data without requiring any coding knowledge.
 
 ## Features
 
-- Conversational interface for querying Danish statistical data
-- Intelligent dataset suggestion based on user queries
-- Clean, minimalist visualizations of complex statistical data
-- Multi-hop reasoning for complex queries
+- Intelligent identification of user needs through natural language queries
+- Suggestions of appropriate datasets based on user questions
+- Multi-hop reasoning for complex statistical inquiries
+- Clean, minimalist visualizations of Danish statistical data
 - Bilingual support (Danish and English)
-- No coding knowledge required
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.10 or higher
+- Node.js 18 or higher
 - Gemini Flash 2.0 API key
 
 ### Installation
@@ -30,31 +30,38 @@ The Danish Statistics Explorer bridges the gap between complex statistical data 
    cd danish-data-dialogue
    ```
 
-2. Install dependencies:
+2. Install backend dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-3. Create a `.env` file based on `.env.example` and add your Gemini Flash 2.0 API key:
+3. Install frontend dependencies:
    ```
-   cp .env.example .env
-   # Edit .env file to add your API key
+   cd frontend
+   npm install
+   cd ..
    ```
 
-4. Run the application:
+4. Create a `.env` file based on `.env.example` and add your Gemini Flash 2.0 API key.
+
+5. Run the development server:
    ```
    python app.py
    ```
 
-## Project Structure
+6. In a separate terminal, start the frontend:
+   ```
+   cd frontend
+   npm run dev
+   ```
 
-- `agents/`: DSPy agents for query understanding and processing
-- `api/`: Statistics Denmark API client
-- `data/`: Data processing and metadata management
-- `utils/`: Utility functions
-- `frontend/`: UI components and styling
-- `visualizations/`: Data visualization components
-- `tests/`: Testing modules
+7. Access the application at http://localhost:5173
+
+## Target Audience
+
+- Non-technical users interested in accessing and analyzing Danish statistics
+- Researchers, journalists, students, and citizens seeking insights from public data
+- Anyone who wants to explore Danish statistical data without programming expertise
 
 ## License
 

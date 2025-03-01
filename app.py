@@ -1,86 +1,95 @@
 """
-Danish Statistics Explorer - Main Application
+Main application file for the Danish Statistics Explorer.
 
-This is the main entry point for the Danish Statistics Explorer application.
-It initializes the backend server and handles API requests from the frontend.
+This module initializes the FastAPI application and defines the core routes
+for frontend-backend communication.
 """
-
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 import uvicorn
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import logging
+from pydantic import BaseModel
+from typing import List, Optional, Dict, Any
 
-# Configure logging
+# Import configuration
+import config
+
+# Set up logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=getattr(logging, config.LOG_LEVEL),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-# Import configuration
-try:
-    from config import DEBUG_MODE
-except ImportError:
-    logger.error("Configuration module not found. Please ensure config.py exists.")
-    DEBUG_MODE = False
-
-# Create FastAPI app
+# Initialize FastAPI app
 app = FastAPI(
-    title="Danish Statistics Explorer",
-    description="Access Danish statistics through an intelligent, conversational interface",
-    version="0.1.0"
+    title="Danish Statistics Explorer API",
+    description="Backend API for the Danish Statistics Explorer application",
+    version="0.1.0",
 )
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust for production
+    allow_origins=["*"],  # Adjust this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Define API models
-class Query(BaseModel):
-    text: str
+class QueryRequest(BaseModel):
+    query: str
     language: str = "en"
-    session_id: str = None
+    conversation_id: Optional[str] = None
+    context: Optional[Dict[str, Any]] = None
 
 class QueryResponse(BaseModel):
     response: str
-    visualizations: list = []
-    suggested_followups: list = []
+    visualizations: Optional[List[Dict[str, Any]]] = None
+    data_table: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
 
-# Define API endpoints
 @app.get("/")
-async def read_root():
-    return {"message": "Danish Statistics Explorer API is running"}
+async def root():
+    """Health check endpoint."""
+    return {"status": "ok", "message": "Danish Statistics Explorer API is running"}
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-@app.post("/query", response_model=QueryResponse)
-async def process_query(query: Query):
+@app.post("/api/query", response_model=QueryResponse)
+async def process_query(request: QueryRequest):
     """
-    Process a user query about Danish statistics
+    Process a natural language query about Danish statistics.
+    
+    This endpoint takes a user query, analyzes it using the Gemini Flash 2.0 model,
+    retrieves relevant data from the Statistics Denmark API, and returns a response
+    with optional visualizations and data tables.
     """
     try:
-        # Placeholder response until agent implementation
+        logger.info(f"Received query: {request.query}")
+        
+        # Placeholder for actual implementation
+        # TODO: Implement query processing pipeline with agents
+        
         return QueryResponse(
-            response="This is a placeholder response. Query processing not yet implemented.",
+            response="This is a placeholder response. The full implementation will process your query about Danish statistics.",
             visualizations=[],
-            suggested_followups=["What is the population of Denmark?", "How has unemployment changed in the last decade?"]
+            data_table=None,
+            metadata={"processed": True, "query_understood": True}
         )
     except Exception as e:
-        logger.error(f"Error processing query: {e}")
+        logger.error(f"Error processing query: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
-# Serve static files for frontend
-app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Global exception handler for all unhandled exceptions."""
+    logger.error(f"Unhandled exception: {str(exc)}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An unexpected error occurred. Please try again later."},
+    )
 
-# Run the application
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=DEBUG_MODE) 
+    logger.info("Starting Danish Statistics Explorer API")
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=config.DEBUG) 

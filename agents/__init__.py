@@ -1,6 +1,6 @@
 """
-Agent modules for the Danish Statistics Explorer.
+Agent components for the Danish Statistics Explorer.
 
-This package contains DSPy-based agents for handling queries,
-understanding user needs, and generating responses.
+This package contains the LLM-powered agents that process user queries,
+perform multi-hop reasoning, and generate responses about Danish statistics.
 """ 
