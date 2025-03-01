@@ -1,28 +1,33 @@
-# Statistics Denmark Data Explorer
+# Danish Statistics Explorer
 
-An intelligent, conversational interface for exploring Statistics Denmark's Statbanks API. This application provides non-technical users with easy access to Danish statistical data through natural language queries and interactive visualizations.
+A public web application providing non-technical users with easy access to Statistics Denmark's Statbanks API through an intelligent, conversational interface.
+
+## Project Overview
+
+The Danish Statistics Explorer bridges the gap between complex statistical data and everyday users by leveraging Gemini Flash 2.0 within an intuitive interface. The system uses DSPy as an agentic framework to intelligently identify user needs, suggest appropriate datasets, perform multi-hop reasoning when necessary, and present results through clean, minimalist visualizations.
 
 ## Features
 
-- Natural language query processing for Statistics Denmark data
-- Automatic visualization generation based on data context
-- Interactive data exploration with follow-up questions
+- Conversational interface for querying Danish statistical data
+- Intelligent dataset suggestion based on user queries
+- Clean, minimalist visualizations of complex statistical data
+- Multi-hop reasoning for complex queries
 - Bilingual support (Danish and English)
-- Data and visualization export capabilities
+- No coding knowledge required
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.9 or higher
-- Azure OpenAI API access (for natural language processing)
+- Python 3.10 or higher
+- Gemini Flash 2.0 API key
 
 ### Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/statbank-explorer.git
-   cd statbank-explorer
+   git clone https://github.com/Rune-Nedergaard/danish-data-dialogue.git
+   cd danish-data-dialogue
    ```
 
 2. Install dependencies:
@@ -30,31 +35,27 @@ An intelligent, conversational interface for exploring Statistics Denmark's Stat
    pip install -r requirements.txt
    ```
 
-3. Create a `.env` file based on `.env.example` and add your API keys:
+3. Create a `.env` file based on `.env.example` and add your Gemini Flash 2.0 API key:
    ```
    cp .env.example .env
-   # Edit .env with your API keys
+   # Edit .env file to add your API key
    ```
 
 4. Run the application:
    ```
-   streamlit run app.py
+   python app.py
    ```
 
-## Usage
+## Project Structure
 
-Simply enter questions about Danish statistics in the chat interface. For example:
-
-- "What's the population of Denmark?"
-- "Show me unemployment rates over the last 5 years"
-- "Compare GDP growth across different regions"
-
-The application will find relevant data, generate appropriate visualizations, and provide insights based on your queries.
-
-## Development
-
-This project is under active development. See the project-steps.md file for the implementation roadmap.
+- `agents/`: DSPy agents for query understanding and processing
+- `api/`: Statistics Denmark API client
+- `data/`: Data processing and metadata management
+- `utils/`: Utility functions
+- `frontend/`: UI components and styling
+- `visualizations/`: Data visualization components
+- `tests/`: Testing modules
 
 ## License
 
-[Your chosen license] 
+This project is licensed under the MIT License - see the LICENSE file for details. 

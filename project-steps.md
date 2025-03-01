@@ -1,17 +1,27 @@
 # Implementation Plan
 
-## 1. Project Setup & Configuration
-- [X] Step 1: Initialize project structure
-  - **Task**: Create the basic project structure with all required directories and initial files
+## Project Overview
+
+The Danish Statistics Explorer is a public web application designed to provide non-technical users with easy access to Statistics Denmark's Statbanks API through an intelligent, conversational interface. This application bridges the gap between complex statistical data and everyday users by leveraging Gemini Flash 2.0 within an intuitive interface.
+
+The system uses DSPy as an agentic framework to intelligently identify user needs, suggest appropriate datasets, perform multi-hop reasoning when necessary, and present results through clean, minimalist visualizations inspired by modern web design principles. The application will guide users through an exploratory research process, helping them discover, analyze, and visualize Danish statistical data without requiring any coding knowledge.
+
+**Target Audience**:
+- Non-technical users interested in accessing and analyzing Danish statistics
+- Researchers, journalists, students, and citizens seeking insights from public data
+- Anyone who wants to explore Danish statistical data without programming expertise
+
+## Project Setup & Configuration
+- [X] Step 1: Set up project with draft Loveable.dev UI
+  - **Task**: Clone and integrate the draft Loveable.dev UI design and adapt it to work with our backend
   - **Files**:
-    - `app.py`: Main Streamlit application entry point
     - `config.py`: Configuration settings and environment variables
     - `requirements.txt`: Project dependencies
     - `README.md`: Basic project documentation
     - `.gitignore`: Standard Python gitignore file
-    - Directories: agents/, api/, data/, utils/, visualizations/, tests/
+    - Directories: agents/, api/, data/, utils/, frontend/
   - **Step Dependencies**: None
-  - **User Instructions**: After generating these files, run pip install -r requirements.txt to install dependencies
+  - **User Instructions**: Clone the repository using `git pull Rune-Nedergaard/danish-data-dialogue`, then run `pip install -r requirements.txt` to install dependencies
 
 - [X] Step 2: Set up environment configuration
   - **Task**: Create configuration handling for environment variables and settings
@@ -19,17 +29,44 @@
     - `config.py`: Implement configuration loading and environment variable management
     - `.env.example`: Template for environment variables
   - **Step Dependencies**: Step 1
-  - **User Instructions**: Create a .env file based on .env.example and add your Azure OpenAI API keys
+  - **User Instructions**: Create a .env file based on .env.example and add your Gemini Flash 2.0 API keys
 
-- [X] Step 3: Set up basic Streamlit application
-  - **Task**: Create the core Streamlit application structure with page configuration
+- [ ] Step 3: Create backend-frontend communication layer
+  - **Task**: Establish API endpoints for frontend-backend communication with the Streamlit-inspired UI
   - **Files**:
-    - `app.py`: Implement basic Streamlit app with title, layout, and session state initialization
+    - `app.py`: Implement core backend logic and API endpoints
+    - `frontend/api_client.js`: Update client-side API integration to match backend endpoints
   - **Step Dependencies**: Steps 1-2
-  - **User Instructions**: Test the application by running streamlit run app.py
+  - **User Instructions**: Test the application by running the backend server and accessing the frontend
 
-## 2. API Integration
-- [X] Step 4: Implement Statistics Denmark API client
+## Data Exploration & Metadata Analysis
+- [ ] Step 4: Analyze existing metadata structure
+  - **Task**: Explore and analyze the metadata stored in .pkl files to understand data organization
+  - **Files**:
+    - `data/metadata_explorer.py`: Script to analyze and visualize the metadata structure
+    - `data/metadata_report.md`: Documentation of findings and recommendations
+  - **Step Dependencies**: Steps 1-3
+  - **User Instructions**: The agent and developer should explore the data together to identify the best approach for metadata processing
+
+- [ ] Step 5: Implement metadata loading and processing
+  - **Task**: Create utilities for loading and processing the .pkl metadata files
+  - **Files**:
+    - `data/__init__.py`: Package initialization
+    - `data/metadata_loader.py`: Functions for loading and processing metadata
+    - `data/metadata_indexer.py`: Tools for indexing metadata for efficient retrieval
+  - **Step Dependencies**: Step 4
+  - **User Instructions**: Run the metadata analysis to generate a summary report of available tables and their structure
+
+- [ ] Step 6: Design context caching strategy for Gemini Flash 2.0
+  - **Task**: Develop an efficient strategy for caching context with Gemini Flash 2.0
+  - **Files**:
+    - `agents/context_manager.py`: Implementation of context caching mechanism
+    - `agents/cache_strategy.py`: Optimization strategies for context management
+  - **Step Dependencies**: Step 5
+  - **User Instructions**: None
+
+## API Integration
+- [ ] Step 7: Implement Statistics Denmark API client
   - **Task**: Create the client for interacting with Statistics Denmark's Statbanks API
   - **Files**:
     - `api/__init__.py`: Package initialization
@@ -37,245 +74,269 @@
   - **Step Dependencies**: Steps 1-3
   - **User Instructions**: None
 
-- [ ] Step 5: Create metadata processing utilities
-  - **Task**: Implement utilities for processing and optimizing DCAT-AP catalogue metadata
+- [ ] Step 8: Create metadata processing utilities
+  - **Task**: Implement utilities for optimizing DCAT-AP catalogue metadata for agent use
   - **Files**:
     - `api/metadata_processor.py`: Functions for processing, deduplicating, and indexing metadata
-  - **Step Dependencies**: Step 4
+  - **Step Dependencies**: Steps 5-7
   - **User Instructions**: None
 
-- [ ] Step 6: Implement query translation
+- [ ] Step 9: Implement query translation
   - **Task**: Create translator to convert natural language queries to API parameters
   - **Files**:
     - `api/query_builder.py`: Functions to translate queries to Statbank API parameters
-  - **Step Dependencies**: Steps 4-5
+  - **Step Dependencies**: Steps 7-8
   - **User Instructions**: None
 
-## 3. LLM Integration
-- [ ] Step 7: Set up DSPy framework
-  - **Task**: Configure DSPy for LLM integration and set up Google Gemini connection
+## LLM Integration
+- [ ] Step 10: Set up Gemini Flash 2.0 integration
+  - **Task**: Configure the application to use Gemini Flash 2.0 with context caching
   - **Files**:
     - `agents/__init__.py`: Package initialization
-    - `agents/llm_config.py`: DSPy configuration and LLM setup
-  - **Step Dependencies**: Steps 1-3
-  - **User Instructions**: Ensure your Google Gemini API keys are in your .env file
+    - `agents/llm_config.py`: Gemini configuration and setup
+  - **Step Dependencies**: Steps 1-3, 6
+  - **User Instructions**: Ensure your Gemini Flash 2.0 API keys are in your .env file
 
-- [ ] Step 8: Implement query processing modules
-  - **Task**: Create DSPy modules for query classification and understanding
+- [ ] Step 11: Implement query processing modules
+  - **Task**: Create modules for query classification and understanding
   - **Files**:
     - `agents/query_processor.py`: Query preprocessing, classification, and clarification modules
     - `agents/prompt_templates.py`: Initial prompt templates for query understanding
-  - **Step Dependencies**: Step 7
+  - **Step Dependencies**: Step 10
   - **User Instructions**: None
 
-- [ ] Step 9: Create few-shot examples
+- [ ] Step 12: Create few-shot examples
   - **Task**: Develop few-shot learning examples for query understanding and table selection
   - **Files**:
-    - `agents/examples.py`: Few-shot examples for various DSPy modules
-  - **Step Dependencies**: Step 8
+    - `agents/examples.py`: Few-shot examples for various modules
+  - **Step Dependencies**: Step 11
   - **User Instructions**: None
 
-## 4. Data Processing
-- [ ] Step 10: Implement data preprocessing
+## Data Processing
+- [ ] Step 13: Implement data preprocessing
   - **Task**: Create utilities for cleaning and formatting data from the API
   - **Files**:
     - `data/__init__.py`: Package initialization
     - `data/preprocessor.py`: Functions for cleaning and normalizing data
-  - **Step Dependencies**: Step 4
+  - **Step Dependencies**: Step 7
   - **User Instructions**: None
 
-- [ ] Step 11: Create statistical analysis functions
+- [ ] Step 14: Create statistical analysis functions
   - **Task**: Implement statistical analysis tools for data interpretation
   - **Files**:
     - `data/analyzer.py`: Functions for trend analysis, group comparison, and outlier detection
-  - **Step Dependencies**: Step 10
+  - **Step Dependencies**: Step 13
   - **User Instructions**: None
 
-- [ ] Step 12: Set up data caching
+- [ ] Step 15: Set up data caching
   - **Task**: Implement memory-based caching for API responses and processed data
   - **Files**:
     - `data/cache_manager.py`: Cache implementation with size management and eviction strategy
-  - **Step Dependencies**: Steps 10-11
-  - **User Instructions**: None
-
-## 5. Agent Implementation
-- [ ] Step 13: Implement simple query agent
-  - **Task**: Create agent for handling direct, simple queries
-  - **Files**:
-    - `agents/simple_agent.py`: Implementation of agent for simple queries
-  - **Step Dependencies**: Steps 7-9
-  - **User Instructions**: None
-
-- [ ] Step 14: Implement complex query agent
-  - **Task**: Create agent for handling multi-hop reasoning queries
-  - **Files**:
-    - `agents/complex_agent.py`: Implementation of agent for complex queries with multi-hop reasoning
-  - **Step Dependencies**: Steps 7-9, 13
-  - **User Instructions**: None
-
-- [ ] Step 15: Create agent manager
-  - **Task**: Implement coordinator for routing queries to appropriate agents
-  - **Files**:
-    - `agents/agent_manager.py`: Agent manager implementation
   - **Step Dependencies**: Steps 13-14
   - **User Instructions**: None
 
-## 6. Visualization Components
-- [ ] Step 16: Implement chart generators
-  - **Task**: Create visualization generators for different chart types
+## Agent Implementation
+- [ ] Step 16: Implement simple query agent
+  - **Task**: Create agent for handling direct, simple queries
   - **Files**:
-    - `visualizations/__init__.py`: Package initialization
-    - `visualizations/chart_generator.py`: Functions for generating various chart types
-  - **Step Dependencies**: Steps 10-11
+    - `agents/simple_agent.py`: Implementation of agent for simple queries
+  - **Step Dependencies**: Steps 10-12
   - **User Instructions**: None
 
-- [ ] Step 17: Create Denmark map visualization
-  - **Task**: Implement specialized map visualization for Danish geographic data
+- [ ] Step 17: Implement complex query agent
+  - **Task**: Create agent for handling multi-hop reasoning queries
   - **Files**:
-    - `visualizations/map_visualizer.py`: Denmark map visualization functions
-    - `data/denmark_municipalities.geojson`: GeoJSON data for Denmark
-  - **Step Dependencies**: Step 16
-  - **User Instructions**: You may need to download the GeoJSON file for Denmark municipalities from a reliable source
+    - `agents/complex_agent.py`: Implementation of agent for complex queries with multi-hop reasoning
+  - **Step Dependencies**: Steps 10-12, 16
+  - **User Instructions**: None
 
-- [ ] Step 18: Add export functionality
-  - **Task**: Implement functionality to export data and visualizations
+- [ ] Step 18: Create agent manager
+  - **Task**: Implement coordinator for routing queries to appropriate agents
   - **Files**:
-    - `visualizations/export_manager.py`: Functions for exporting to different formats
+    - `agents/agent_manager.py`: Agent manager implementation
   - **Step Dependencies**: Steps 16-17
   - **User Instructions**: None
 
-## 7. Utility Functions
-- [ ] Step 19: Implement language detection and translation
-  - **Task**: Create utilities for bilingual support (Danish and English)
+## UI Component Adaptation
+- [ ] Step 19: Analyze Loveable.dev UI components
+  - **Task**: Analyze the Streamlit-inspired UI components to understand their purpose and functionality
+  - **Files**:
+    - `docs/ui_components_analysis.md`: Documentation of UI components and their purposes
+    - `frontend/components/README.md`: Updated documentation for component usage
+  - **Step Dependencies**: Steps 1-3
+  - **User Instructions**: None
+
+- [ ] Step 20: Adapt UI components for backend integration
+  - **Task**: Modify UI components as needed to work with our specific backend implementation
+  - **Files**:
+    - `frontend/components/[component_files]`: Update components to match backend functionality
+    - `frontend/styles/[style_files]`: Update styling as needed
+  - **Step Dependencies**: Step 19
+  - **User Instructions**: None
+
+- [ ] Step 21: Implement visualization components
+  - **Task**: Create visualization generators following minimalist design principles
+  - **Files**:
+    - `visualizations/__init__.py`: Package initialization
+    - `visualizations/chart_generator.py`: Functions for generating clean, minimalist chart types with subtle animations
+  - **Step Dependencies**: Steps 13-14, 20
+  - **User Instructions**: None
+
+## Visualization Components
+- [ ] Step 22: Create Denmark map visualization
+  - **Task**: Implement specialized map visualization for Danish geographic data with clean, minimalist styling
+  - **Files**:
+    - `visualizations/map_visualizer.py`: Denmark map visualization functions
+    - `data/denmark_municipalities.geojson`: GeoJSON data for Denmark
+  - **Step Dependencies**: Step 21
+  - **User Instructions**: You may need to download the GeoJSON file for Denmark municipalities from a reliable source
+
+- [ ] Step 23: Add export functionality
+  - **Task**: Implement functionality to export data and visualizations
+  - **Files**:
+    - `visualizations/export_manager.py`: Functions for exporting to different formats
+    - `frontend/components/ExportControls.js`: Update export UI elements to match design
+  - **Step Dependencies**: Steps 21-22
+  - **User Instructions**: None
+
+## Utility Functions
+- [ ] Step 24: Implement language detection and translation
+  - **Task**: Create utilities for bilingual support (Danish and English) with an elegant language toggle
   - **Files**:
     - `utils/__init__.py`: Package initialization
     - `utils/language_detector.py`: Language detection utilities
     - `utils/translation.py`: Translation functions and language mappings
+    - `frontend/components/LanguageToggle.js`: Update language toggle to match design
   - **Step Dependencies**: Steps 1-3
   - **User Instructions**: None
 
-- [ ] Step 20: Create error handling system
-  - **Task**: Implement global error handler and error recovery strategies
+- [ ] Step 25: Create error handling system
+  - **Task**: Implement global error handler with subtle, user-friendly error messages
   - **Files**:
     - `utils/error_handler.py`: Error handling utilities and user-friendly messages
+    - `frontend/components/ErrorDisplay.js`: Update error UI components
   - **Step Dependencies**: Steps 1-3
   - **User Instructions**: None
 
-## 8. Streamlit UI Development
-- [ ] Step 21: Implement chat interface
-  - **Task**: Create the conversational interface for user queries
+## UI Integration
+- [ ] Step 26: Integrate documentation-style query display
+  - **Task**: Adapt the UI to display queries as "section headers" with responses as expandable content
   - **Files**:
-    - `app.py`: Update with chat display and input components
-  - **Step Dependencies**: Steps 1-3
+    - `frontend/components/QueryDisplay.js`: Update to documentation-style layout
+    - `frontend/styles/query-display.css`: Styling for documentation-like flow
+  - **Step Dependencies**: Steps 1-3, 20
   - **User Instructions**: None
 
-- [ ] Step 22: Add example queries functionality
-  - **Task**: Implement example query buttons to help users get started
+- [ ] Step 27: Implement card-based query suggestions
+  - **Task**: Replace basic text input with elegant card-based query suggestions
   - **Files**:
-    - `app.py`: Update with example query section
-  - **Step Dependencies**: Step 21
+    - `frontend/components/QuerySuggestions.js`: Update with card-based design
+    - `frontend/styles/query-suggestions.css`: Styling for query suggestion cards
+  - **Step Dependencies**: Step 26
   - **User Instructions**: None
 
-- [ ] Step 23: Implement visualization display
-  - **Task**: Create display area for visualizations with customization controls
+- [ ] Step 28: Enhance visualization display
+  - **Task**: Implement clean visualization display with subtle animations and transitions
   - **Files**:
-    - `app.py`: Update with visualization display section
-  - **Step Dependencies**: Steps 16-18, 21-22
+    - `frontend/components/VisualizationDisplay.js`: Update with enhanced animations
+    - `frontend/styles/visualizations.css`: Styling for visualizations
+  - **Step Dependencies**: Steps 21-23, 26-27
   - **User Instructions**: None
 
-- [ ] Step 24: Add data table display
-  - **Task**: Implement data table display with sorting and pagination
+- [ ] Step 29: Implement progressive disclosure data tables
+  - **Task**: Create expandable data tables following progressive disclosure principle
   - **Files**:
-    - `app.py`: Update with data table display section
-  - **Step Dependencies**: Steps 21-23
+    - `frontend/components/DataTable.js`: Update with progressive disclosure functionality
+    - `frontend/styles/data-table.css`: Styling for data tables
+  - **Step Dependencies**: Steps 26-28
   - **User Instructions**: None
 
-- [ ] Step 25: Create export controls
-  - **Task**: Add UI controls for exporting data and visualizations
-  - **Files**:
-    - `app.py`: Update with export control section
-  - **Step Dependencies**: Steps 18, 23-24
-  - **User Instructions**: None
-
-- [ ] Step 26: Implement language toggle
-  - **Task**: Add UI control for switching between Danish and English
-  - **Files**:
-    - `app.py`: Update with language selection
-  - **Step Dependencies**: Step 19
-  - **User Instructions**: None
-
-## 9. Integration and Core Functionality
-- [ ] Step 27: Connect query processing pipeline
-  - **Task**: Integrate query processing, agent selection, and response generation
+## Integration and Core Functionality
+- [ ] Step 30: Connect query processing pipeline to UI
+  - **Task**: Integrate query processing, agent selection, and response generation with documentation-style UI
   - **Files**:
     - `app.py`: Implement process_query function to handle the full pipeline
-  - **Step Dependencies**: Steps 4-15, 21-26
+    - `frontend/api/queryService.js`: Update API service for query processing
+  - **Step Dependencies**: Steps 7-18, 26-29
   - **User Instructions**: None
 
-- [ ] Step 28: Implement session state management
-  - **Task**: Create logic for maintaining conversation context and current data
+- [ ] Step 31: Implement session state management
+  - **Task**: Create logic for maintaining conversation context and current data in the documentation-style flow
   - **Files**:
     - `app.py`: Update with session state management
-  - **Step Dependencies**: Step 27
+    - `frontend/utils/sessionManager.js`: Client-side session management
+  - **Step Dependencies**: Step 30
   - **User Instructions**: None
 
-- [ ] Step 29: Add follow-up question handling
-  - **Task**: Implement logic for processing follow-up questions with context
+- [ ] Step 32: Add follow-up question handling
+  - **Task**: Implement logic for processing follow-up questions with context in the document-like UI
   - **Files**:
     - `agents/agent_manager.py`: Update with follow-up handling
     - `app.py`: Update to maintain context for follow-ups
-  - **Step Dependencies**: Steps 15, 27-28
+    - `frontend/components/FollowUpSuggestions.js`: Create UI for follow-up suggestions
+  - **Step Dependencies**: Steps 18, 30-31
   - **User Instructions**: None
 
-## 10. Error Handling and Edge Cases
-- [ ] Step 30: Implement input validation
-  - **Task**: Add validation for user input with appropriate feedback
+## Error Handling and Edge Cases
+- [ ] Step 33: Implement input validation
+  - **Task**: Add validation for user input with subtle feedback indicators
   - **Files**:
     - `app.py`: Update with input validation
     - `utils/error_handler.py`: Add input validation functions
-  - **Step Dependencies**: Steps 20, 27-29
+    - `frontend/components/InputValidation.js`: Create validation feedback components
+  - **Step Dependencies**: Steps 25, 30-32
   - **User Instructions**: None
 
-- [ ] Step 31: Add graceful API error handling
-  - **Task**: Implement recovery strategies for API errors
+- [ ] Step 34: Add graceful API error handling
+  - **Task**: Implement recovery strategies for API errors with minimalist error messages
   - **Files**:
     - `api/statbank_client.py`: Update with error handling
     - `app.py`: Update to display appropriate messages for API errors
-  - **Step Dependencies**: Steps 4, 20, 27
+    - `frontend/components/ErrorDisplay.js`: Update error display components
+  - **Step Dependencies**: Steps 7, 25, 30
   - **User Instructions**: None
 
-- [ ] Step 32: Implement timeout handling
-  - **Task**: Add timeout mechanism for long-running operations
+- [ ] Step 35: Implement timeout handling
+  - **Task**: Add timeout mechanism with subtle loading indicators and recovery options
   - **Files**:
     - `agents/agent_manager.py`: Update with timeout handling
     - `app.py`: Update to handle timeouts gracefully
-  - **Step Dependencies**: Steps 15, 27-29
+    - `frontend/components/LoadingStates.js`: Create minimal loading indicators
+  - **Step Dependencies**: Steps 18, 30-32
   - **User Instructions**: None
 
-## 11. Testing
-- [ ] Step 33: Create unit tests for API client
+## Testing
+- [ ] Step 36: Create unit tests for API client
   - **Task**: Implement tests for the Statistics Denmark API client
   - **Files**:
     - `tests/test_api.py`: Tests for API client functionality
-  - **Step Dependencies**: Step 4
+  - **Step Dependencies**: Step 7
   - **User Instructions**: Run tests with pytest tests/test_api.py
 
-- [ ] Step 34: Create unit tests for agents
+- [ ] Step 37: Create unit tests for agents
   - **Task**: Implement tests for query processing and agent functionality
   - **Files**:
     - `tests/test_agents.py`: Tests for agent functionality
-  - **Step Dependencies**: Steps 7-15
+  - **Step Dependencies**: Steps 10-18
   - **User Instructions**: Run tests with pytest tests/test_agents.py
 
-- [ ] Step 35: Create unit tests for data processing
+- [ ] Step 38: Create unit tests for data processing
   - **Task**: Implement tests for data processing and analysis
   - **Files**:
     - `tests/test_data.py`: Tests for data processing functionality
-  - **Step Dependencies**: Steps 10-12
+  - **Step Dependencies**: Steps 13-15
   - **User Instructions**: Run tests with pytest tests/test_data.py
 
-## 12. Deployment
-- [ ] Step 36: Create Azure deployment configuration
+- [ ] Step 39: Create UI integration tests
+  - **Task**: Implement tests for frontend-backend integration
+  - **Files**:
+    - `tests/test_ui_integration.py`: Tests for UI integration
+    - `tests/test_visualization_rendering.py`: Tests for visualization rendering
+  - **Step Dependencies**: Steps 26-32
+  - **User Instructions**: Run tests with pytest tests/test_ui_integration.py
+
+## Deployment
+- [ ] Step 40: Create Azure deployment configuration
   - **Task**: Set up configuration files for Azure deployment
   - **Files**:
     - `app.yaml`: Azure App Service configuration
@@ -283,7 +344,7 @@
   - **Step Dependencies**: All previous steps
   - **User Instructions**: Follow the Azure deployment instructions in README.md
 
-- [ ] Step 37: Add monitoring and logging
+- [ ] Step 41: Add monitoring and logging
   - **Task**: Implement application monitoring and logging
   - **Files**:
     - `utils/monitoring.py`: Monitoring and logging utilities
@@ -291,10 +352,18 @@
   - **Step Dependencies**: All previous steps
   - **User Instructions**: Configure Application Insights connection string in your Azure settings
 
-- [ ] Step 38: Finalize documentation
+- [ ] Step 42: Finalize documentation
   - **Task**: Complete documentation with usage examples and API details
   - **Files**:
     - `README.md`: Update with comprehensive documentation
     - `USAGE.md`: Create usage guide with example queries
   - **Step Dependencies**: All previous steps
   - **User Instructions**: None
+
+- [ ] Step 43: Create onboarding experience
+  - **Task**: Implement first-run experience to demonstrate capabilities
+  - **Files**:
+    - `frontend/components/Onboarding.js`: Create onboarding components
+    - `frontend/styles/onboarding.css`: Styling for onboarding experience
+  - **Step Dependencies**: All previous steps
+  - **User Instructions**: The onboarding will automatically appear for first-time users
